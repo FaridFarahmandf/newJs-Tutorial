@@ -32,66 +32,106 @@
     <p id="p8"></p>
     <p id="p9"></p>
     <p id="p10"></p>
-    <div id="container" class="bg-primary p-4 row"></div>
-    <div id="container1" class="bg-success p-4 row my-3"></div>
-
-
 
     <script>
-        var x = 10 ; 
-        document.getElementById("p1").innerHTML = x ;
-        const pi = 3.14 ;
-        document.getElementById("p2").innerHTML = pi ;
+    //function declaration 
+    console.log(`function declaration hoisted`);
+    logName();
+    console.log("-------------------------");
+    function logName(){
+        console.log("function declaration");
+    }
+    logName();
+    console.log("function expressions can not hoist");
+    // eLogName();
+    const eLogName = function(){
+        console.log("function expression");
+    }
+    eLogName();
 
-        // pi = 4 ;
+    //parameters and arguments
 
-        var y = 20 ;
-        console.log(`${y} before if/else and it's public`);
-        if(y>10){
-            y="bigger than Ten"
-            console.log(`${y} in if/else`);
+    const fMessage = function (name , message) {
+        console.log(`${name} : ${message}`);
+    }
+    fMessage("Farid" , "you are awesome") ; 
+
+    const rMessage = function (name = "Shayan" , message = "Bache kooni") {
+        return `${name} : ${message}`
+    }
+    document.getElementById("p1").innerHTML = rMessage("Rouzbeh","donkey forever");
+    document.getElementById("p2").innerHTML = rMessage();
+    
+    const defaultValue = {
+        firstName : "Saman" , 
+        LastName : "Sayaregan",
+        age:27 ,
+        message:"raft ghati morgha"
+    }
+    const defaultMessage = function (person=defaultValue) {
+        return `${person.firstName} : ${person.message}`
+    }
+    document.getElementById("p3").innerHTML = defaultMessage();
+
+    //arrow function
+
+    const aFMessage = firsNameOwner => `${firsNameOwner} is the owner of site`
+    console.log(aFMessage("Farnoosh"))
+
+
+    const multiplying = (x , y) => {
+        if(x<0){
+            throw new Error("x must be positive") ;
         }
-        console.log(`${y} after if/else and it's public`);
-
-        for(var i = 1 ; i <=3 ; i++) {
-            y = 10 + i
-            console.log("in for loop "+y); 
+        if(y<0){
+            throw new Error("y must be negative");
         }
-        console.log("in public "+y);
+        return x * y ;
+    }
+    console.log(multiplying(7,8));
+    // console.log(multiplying(7,-8));
 
-        var div ;
-        var container = document.getElementById("container");
-        for(var i = 0 ; i < 5 ; i++) {
-            div = document.createElement("div");
-            div.onclick = function(){
-                alert("this is box #" + i);
-            };
-            container.appendChild(div)
+    const person = (firstName , lastName) => ({
+        first:firstName ,
+        last:lastName
+    })
+    console.log(person("Amin","Ehsani"));
+    
+    const tahoe = {
+        mountains:["Freel", "Rose" , "Tallac" , "Rubicon" , "Silver"],
+        print:function(delay=1000){
+            console.log(this);
+            setTimeout(()=>{
+                console.log(this.mountains.join(", "));
+                console.log(this)
+            },delay)
         }
+    }
+    tahoe.print()
 
-        let sec ; 
-        const container1 = document.getElementById("container1")
-        for(let j = 0 ; j < 5 ; j++) {
-            sec = document.createElement("section")
-            sec.onclick = function(){
-                alert("this is box #"+j);
-            }
-            container1.appendChild(sec)
+    const tahoe1 = {
+        mountains:["Freel", "Rose" , "Tallac" , "Rubicon" , "Silver"],
+        print:function(delay=1000){
+            setTimeout(function(){
+                // console.log(this.mountains.join(", "));
+                console.log(this)
+            },delay)
         }
-
-        const authorFname = "Farid" , authorLname = "Farahmand" ;
-        console.log(authorFname + " " + authorLname + " - using concatenating");
-        console.log(`${authorFname} ${authorLname} - using string template`);
-
-        // document.body.innerHTML = `
-        //     <header>
-        //         <h1>Farid Web</h1>    
-        //     </header>
-        // `
-        function logSth(){
-            console.log("function !!!");
+    }
+    tahoe1.print();
+    const tahoe2 = {
+        mountains:["Freel", "Rose" , "Tallac" , "Rubicon" , "Silver"],
+        print:(delay=1000)=>{
+            setTimeout(()=>{
+                // console.log(this.mountains.join(", "));
+                console.log(this)
+            },delay)
         }
-        logSth();
+    }
+    tahoe2.print();
+
+
+
 
     </script>
 
