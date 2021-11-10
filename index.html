@@ -13,10 +13,87 @@
       crossorigin="anonymous"
     />
 </head>
+<style>
+    #container >* , #container1>*{
+        background-color:#f1f1f1 ;
+        width: 100px;
+        height: 100px;
+        margin-left: 5px;
+    }
+</style>
 <body>
+    <p id="p1"></p>
+    <p id="p2"></p>
+    <p id="p3"></p>
+    <p id="p4"></p>
+    <p id="p5"></p>
+    <p id="p6"></p>
+    <p id="p7"></p>
+    <p id="p8"></p>
+    <p id="p9"></p>
+    <p id="p10"></p>
+    <div id="container" class="bg-primary p-4 row"></div>
+    <div id="container1" class="bg-success p-4 row my-3"></div>
 
 
 
+    <script>
+        var x = 10 ; 
+        document.getElementById("p1").innerHTML = x ;
+        const pi = 3.14 ;
+        document.getElementById("p2").innerHTML = pi ;
+
+        // pi = 4 ;
+
+        var y = 20 ;
+        console.log(`${y} before if/else and it's public`);
+        if(y>10){
+            y="bigger than Ten"
+            console.log(`${y} in if/else`);
+        }
+        console.log(`${y} after if/else and it's public`);
+
+        for(var i = 1 ; i <=3 ; i++) {
+            y = 10 + i
+            console.log("in for loop "+y); 
+        }
+        console.log("in public "+y);
+
+        var div ;
+        var container = document.getElementById("container");
+        for(var i = 0 ; i < 5 ; i++) {
+            div = document.createElement("div");
+            div.onclick = function(){
+                alert("this is box #" + i);
+            };
+            container.appendChild(div)
+        }
+
+        let sec ; 
+        const container1 = document.getElementById("container1")
+        for(let j = 0 ; j < 5 ; j++) {
+            sec = document.createElement("section")
+            sec.onclick = function(){
+                alert("this is box #"+j);
+            }
+            container1.appendChild(sec)
+        }
+
+        const authorFname = "Farid" , authorLname = "Farahmand" ;
+        console.log(authorFname + " " + authorLname + " - using concatenating");
+        console.log(`${authorFname} ${authorLname} - using string template`);
+
+        // document.body.innerHTML = `
+        //     <header>
+        //         <h1>Farid Web</h1>    
+        //     </header>
+        // `
+        function logSth(){
+            console.log("function !!!");
+        }
+        logSth();
+
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" 
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" 
