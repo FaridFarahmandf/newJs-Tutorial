@@ -34,104 +34,133 @@
     <p id="p10"></p>
 
     <script>
-    //function declaration 
-    console.log(`function declaration hoisted`);
-    logName();
-    console.log("-------------------------");
-    function logName(){
-        console.log("function declaration");
+
+    const myCar = {
+        company : "pegeout" , 
+        name : 207,
+        year : 1390
     }
-    logName();
-    console.log("function expressions can not hoist");
-    // eLogName();
-    const eLogName = function(){
-        console.log("function expression");
+
+    const {company , name:carName} = myCar ;
+
+    const myLaptop = {
+        company:"HP" ,
+        model:"450G Probook",
+        cpu:"Core i7 - 8th generation",
+        ram:"8gb",
+        hard:"external 256Gb" 
     }
-    eLogName();
+    let {company:laptopCompany,model} = myLaptop ; 
+    laptopCompany = "Apple";
+    model = "Macbook Pro" ; 
 
-    //parameters and arguments
+    console.log(company,carName);
 
-    const fMessage = function (name , message) {
-        console.log(`${name} : ${message}`);
+    console.log(laptopCompany,model);
+
+//--------------------------------------
+
+    const lordify = person => {
+        console.log(`${person.firstName} is a Lord`);
     }
-    fMessage("Farid" , "you are awesome") ; 
 
-    const rMessage = function (name = "Shayan" , message = "Bache kooni") {
-        return `${name} : ${message}`
+    const lordObj = {
+        firstName : "Mohammad" ,
+        lastName :"Moradzade",
     }
-    document.getElementById("p1").innerHTML = rMessage("Rouzbeh","donkey forever");
-    document.getElementById("p2").innerHTML = rMessage();
-    
-    const defaultValue = {
-        firstName : "Saman" , 
-        LastName : "Sayaregan",
-        age:27 ,
-        message:"raft ghati morgha"
+    lordify(lordObj);
+
+    const lordifyDestruct = ({firstName , lastName}) => {
+        console.log(`${firstName} is a Lord but in struct way`);
     }
-    const defaultMessage = function (person=defaultValue) {
-        return `${person.firstName} : ${person.message}`
-    }
-    document.getElementById("p3").innerHTML = defaultMessage();
+    lordifyDestruct(lordObj)
 
-    //arrow function
-
-    const aFMessage = firsNameOwner => `${firsNameOwner} is the owner of site`
-    console.log(aFMessage("Farnoosh"))
-
-
-    const multiplying = (x , y) => {
-        if(x<0){
-            throw new Error("x must be positive") ;
-        }
-        if(y<0){
-            throw new Error("y must be negative");
-        }
-        return x * y ;
-    }
-    console.log(multiplying(7,8));
-    // console.log(multiplying(7,-8));
-
-    const person = (firstName , lastName) => ({
-        first:firstName ,
-        last:lastName
-    })
-    console.log(person("Amin","Ehsani"));
-    
-    const tahoe = {
-        mountains:["Freel", "Rose" , "Tallac" , "Rubicon" , "Silver"],
-        print:function(delay=1000){
-            console.log(this);
-            setTimeout(()=>{
-                console.log(this.mountains.join(", "));
-                console.log(this)
-            },delay)
+    const author = {
+        firstname : "Farid" ,
+        lastname : "Farahmand",
+        father : {
+            firstName : "Freidoon" ,
+            lastName : "Farahmand"
         }
     }
-    tahoe.print()
+    const authorify = ({father:{firstName}}) => {
+        console.log(`father of this person is ${firstName} , Wow destructure of nested object !!!`);
+    }
+    authorify(author)
 
-    const tahoe1 = {
-        mountains:["Freel", "Rose" , "Tallac" , "Rubicon" , "Silver"],
-        print:function(delay=1000){
-            setTimeout(function(){
-                // console.log(this.mountains.join(", "));
-                console.log(this)
-            },delay)
+    // array destructure 
+
+    const [firstAnimal,secondAnimal,,fourthAnimal] = ["Elephant" , "Lion" , "Wolf","Tiger", "Puma", "Panter" , "Dog"]
+    console.log(firstAnimal," - ",secondAnimal," - ",fourthAnimal);
+
+    const phoneBrand = "Samsung" ;
+    const phoneModel = "s9 plus" ;
+    const phoneInfo = function() {
+        console.log(`phone info : ${phoneObj.brand} - ${phoneObj.model}`);
+        // return `phone info : ${phoneObj.brand} - ${phoneObj.model}`
+    }
+    const phoneObj = {
+        brand : phoneBrand , 
+        model : phoneModel ,
+        info:phoneInfo,
+        hard(){
+            console.log("memory : 64 Gb");
         }
     }
-    tahoe1.print();
-    const tahoe2 = {
-        mountains:["Freel", "Rose" , "Tallac" , "Rubicon" , "Silver"],
-        print:(delay=1000)=>{
-            setTimeout(()=>{
-                // console.log(this.mountains.join(", "));
-                console.log(this)
-            },delay)
+
+    const carObj = {
+        brand : "Renault" ,
+        model : "Latitude" ,
+        info(){
+            console.log(`my father's car is ${this.brand} ${this.model}`);
         }
     }
-    tahoe2.print();
 
 
+    phoneObj.info();
+    phoneObj.hard();
+    carObj.info();
 
+    //spread operator 
+
+    const bayanBartarInst = {
+        name : "Bayan Bartar" ,
+        place : "Saadatabad",
+        teacher:{...lordObj} ,
+        student:{...author} ,
+        classInfo(){
+            console.log(`in ${this.name} ths student ${this.student.firstname} has a class with ${this.teacher.firstName}`);
+        }
+    }
+    bayanBartarInst.classInfo();
+
+    const number1_3 = [1,2,3] ;
+    const number4_6 = [4,5,6] ;
+    const number1_6 = [...number1_3,...number4_6];
+    console.log(number1_6.join(" - ")) ; 
+
+
+    const fruits = ["Apples" , "Orange" , "Cucumber" , "banana" , "peach" , "mango"];
+    const fruitsSpread= [...fruits].reverse();
+    console.log(fruitsSpread);
+    console.log(fruits);
+    // const [last] = fruits.reverse();
+    // console.log(last);
+    // console.log(fruits);
+
+    const [first, ...others] = fruits;
+    console.log(others.join(" - "));
+
+    function directions(...args) {
+        let [start , ...remaining] = args ;
+        let [finish,...stops] = remaining.reverse();
+        console.log(`drive through ${args.length} towns`);
+        console.log(`start in ${start}`);
+        console.log(`the destination is ${finish}`);
+        console.log(`stopping ${stops.length} times in between`)
+    }
+
+    directions("Trucee" , "Tahoe city","Sunnyside","Homewood","Tahoma");
 
     </script>
 
