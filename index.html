@@ -96,6 +96,68 @@
         headText.innerText = "VOLA !"
         headBody.appendChild(headText);
         target.appendChild(headBody);
+
+        //immutability
+
+        let colorLawn = {
+          rate:0 , 
+          color:"#909090",
+          title:"lawn"
+        }
+        function colorRate(color,rate){
+          color.rate = rate ; 
+          return color;
+        }
+        console.log(colorRate(colorLawn,5).rate);
+        console.log(colorLawn.rate);
+
+        const colorRateImmutable = (color,rate) => ({
+          ...colorLawn,
+          rate
+        })
+
+        let list = [{title:"Red Red"},{title:"Lawn"},{title:"Party Red"}];
+        const changeList = (title,colors) => {
+          colors.push({title:title});
+          return colors;
+        }
+        console.log(changeList("Green",list).length);
+        console.log(list.length);
+        const immutableChangeList = (title,color) => {
+          return color.concat({title})
+        }
+        console.log(immutableChangeList("Blue",list).length);
+        console.log(list.length);
+
+        // pure function 
+        const farid = {
+          name : "Farid" ,
+          age :24 ,
+          haveBachelor:true ,
+          haveMaster:false 
+        }
+
+        // const isNotPure = person => {
+        //   person.haveMaster = true ;
+        //   return person ;
+        // }
+        // console.log(isNotPure(farid));
+        // console.log(farid);
+
+        const pureFunc = person =>({
+          ...person ,
+          haveBachelor:false
+        })
+        console.log(pureFunc(farid));
+        console.log(farid);
+
+        const changeDOMImpure = (text) => {
+          const h1 = document.createElement("h1");
+          h1.innerText = text ;
+          document.body.appendChild(h1)
+        }
+        changeDOMImpure("Hi there")
+
     </script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
