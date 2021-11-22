@@ -35,128 +35,151 @@
     <p id="p10"></p>
     <div id="target"></div>
     <script>
-        const showMsg = (message) => {
-            console.log(message);
-        }
-        showMsg("I am log")
+      const schools = ["Salam" , "Talash" , "Allameh" , "Hadaf","Daneshmand","Sohrab Sepehri"] ;
+      // join method
+      console.log(schools.join(" , "))
+      console.log(schools.filter(s => s[0]=== "S"))
 
-        //arrow function 
+      //filter (takes predicate as an argument)
+      const filterName = (array , name) => {
+        return array.filter(arrItem => arrItem !== name)
+      }
+      console.log(filterName(schools,"Salam").join(" / "));
+      console.log(filterName(schools,"Talash").join("\n"));
 
-        const arrFMsg = (msg) => console.log(msg);
+      //map 
+      const mapSchools = schools.map(item => item + " High school") ;
+      
+      console.log(mapSchools.join("\n"));
 
-        arrFMsg("I am arrow function log")
+      let mapObjSchool = schools.map((item,index) => ({name : item}));
+      console.log(mapObjSchool);
 
-        //method 
-        const msgObj = {
-            message : "I am object message" ,
-            logMsg : (msg) =>{
-                console.log(msg);
-            }
-        }
-        msgObj.logMsg(msgObj.message);
-        //in Arrays
-        const arrayFunc = ["message1",(msg)=>console.log(msg),"message2",function(message){console.log(message);}] ;
-        arrayFunc[1](arrayFunc[0]);
-        arrayFunc[3](arrayFunc[2])
+      const mapEditPure = (oldName , name , arr) => 
+      arr.map(item => (item.name === oldName ? {...item,name} : item));
+      let newSchool = mapEditPure("Talash","Sagdooni",mapObjSchool);
+      console.log(newSchool[1]);
+      console.log(mapObjSchool[1]); 
 
-        //sent as a parameter
-        const orgFunc = paramFunc =>{
-            paramFunc("this function sent as a parameter");
-        }
-        orgFunc(message=>{console.log(message);})
-        //return function
-        const retFunc = paramFunc => {
-            return function(message) {
-                paramFunc(message.toUpperCase() + " !!!")
-            }
-        }
-        const retAns = retFunc(message => {console.log(message);}) 
-        retAns("this is going to be uppercase");
-        retAns("I am another return function");
-        
-        //imperative vs declarative
-
-        const urlStr = "This is the url for test." ;
-        let urlFriendly = ""
-        for(let i = 0 ; i < urlStr.length ; i++) {
-          if (urlStr[i] === " ") {
-            urlFriendly += "-" ;
-          }else {
-            urlFriendly += urlStr[i] ;
+      let bookSchools = [
+        {name:"Yorktown"},
+        {name:"Stratford"},
+        {name:"Washington and Liberty"},
+        {name:"Wakefield"}
+      ]
+      const editName = (oldName , name , arr) => 
+      arr.map(item => {
+        if(item.name === oldName){
+          return {
+            ...item , name
+          }}else {
+            item
           }
         }
-        console.log(urlFriendly);
+      )
+      let updatedSchools = editName("Stratford", "HB woodlawn",bookSchools);
+      console.log(updatedSchools[1]);
+      console.log(bookSchools[1]);
 
-        console.log(urlStr.replace(/ /g,"-"));
+      //tranform object into an array 
 
-        //make div 
-        const target = document.getElementById("target") ;
-        const headBody = document.createElement("section");
-        const headText = document.createElement("h3");
-        headText.innerText = "VOLA !"
-        headBody.appendChild(headText);
-        target.appendChild(headBody);
+      const schoolObj = {
+        "yorktown" : 10 ,
+        "Washington and Liberty" : 2 ,
+        "Wakefield" : 5
+      }
 
-        //immutability
+      const schoolArray = Object.keys(schoolObj).map(key => ({
+        name:key ,
+        wins:schoolObj[key]
+      }))
 
-        let colorLawn = {
-          rate:0 , 
-          color:"#909090",
-          title:"lawn"
+
+      console.log(schoolArray);
+
+      const farahmandMember = {
+        "Farid" : "Bachelor of Software" ,
+        "Farnoosh" : "Master of law" ,
+        "Saman":"Master of architecture" ,
+        "Ehsan" : "Master of IT"
+      }
+
+      const farahmandArray = Object.keys(farahmandMember).map(key =>({
+        name : key ,
+        degree : farahmandMember[key]
+      }) )
+
+      console.log(farahmandArray);
+
+      // reduce and reduceRight
+
+      const numbers = [17,14,12,20,18,22,7,3,11];
+      const maxNumber = numbers.reduce((max,number) => {
+        console.log(`${number} > ${max} : ${number > max} `);
+        if (number > max) {
+          return number
+        }else return max
+      },0)
+      console.log("maxNumber",maxNumber);
+
+      const maxNumberShorthand = (arrNumbers) => arrNumbers.reduce((max , number) =>
+       number > max ?  number :  max , 0 
+      ) 
+      console.log(maxNumberShorthand([10,15,12,13,20 ,14]));
+
+      const colors = [
+        {
+          id:"xekare",
+          title:"red red",
+          rating:3
+        },
+        {
+          id:"jbwsof",
+          title:"big blue",
+          rating:2
+        },
+        {
+          id:"prigbj",
+          title:"grizzly gray",
+          rating:5
+        },
+        {
+          id:"ryhbhsl",
+          title:"banana",
+          rating:1
         }
-        function colorRate(color,rate){
-          color.rate = rate ; 
-          return color;
+      ]
+      const hashColors = colors.reduce((hash,{id,title,rating})=>{
+        hash[id] = {title , rating} ;
+        return hash
+      },{}) ;
+      console.log(hashColors);
+
+      const colorsUnique = ["red" , "red" , "green" , "blue" , "green"];
+      const uniqueArr = colorsUnique.reduce((value , currentVal , index ,arr) => {
+        // console.log(value);
+        if (index === 0) {
+          value[index] = currentVal;
+          return value
+        }  else {
+          for (let i = 0; i < value.length + 1; i++) {
+            if (currentVal === value[i]) {
+              return [...value]
+            }else if(i === value.length - 1) return [...value , currentVal]
+          }
         }
-        console.log(colorRate(colorLawn,5).rate);
-        console.log(colorLawn.rate);
+      },[])
 
-        const colorRateImmutable = (color,rate) => ({
-          ...colorLawn,
-          rate
-        })
+      //indexOf
+      const uniqueColors = colorsUnique.reduce((unique,color) => 
+        unique.indexOf(color) !== -1 ? unique : [...unique,color]
+      ,[])
+        
+        
+      console.log(uniqueArr);
 
-        let list = [{title:"Red Red"},{title:"Lawn"},{title:"Party Red"}];
-        const changeList = (title,colors) => {
-          colors.push({title:title});
-          return colors;
-        }
-        console.log(changeList("Green",list).length);
-        console.log(list.length);
-        const immutableChangeList = (title,color) => {
-          return color.concat({title})
-        }
-        console.log(immutableChangeList("Blue",list).length);
-        console.log(list.length);
 
-        // pure function 
-        const farid = {
-          name : "Farid" ,
-          age :24 ,
-          haveBachelor:true ,
-          haveMaster:false 
-        }
 
-        // const isNotPure = person => {
-        //   person.haveMaster = true ;
-        //   return person ;
-        // }
-        // console.log(isNotPure(farid));
-        // console.log(farid);
-
-        const pureFunc = person =>({
-          ...person ,
-          haveBachelor:false
-        })
-        console.log(pureFunc(farid));
-        console.log(farid);
-
-        const changeDOMImpure = (text) => {
-          const h1 = document.createElement("h1");
-          h1.innerText = text ;
-          document.body.appendChild(h1)
-        }
-        changeDOMImpure("Hi there")
 
     </script>
     <script
