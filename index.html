@@ -1,26 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>new Js</title>
-        <!--bootstrap link-->
+    <!--bootstrap link-->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous"
     />
-</head>
-<body>
+  </head>
+  <style>
+    #container > *,
+    #container1 > * {
+      background-color: #f1f1f1;
+      width: 100px;
+      height: 100px;
+      margin-left: 5px;
+    }
+  </style>
+  <body>
+    <p id="p1"></p>
+    <p id="p2"></p>
+    <p id="p3"></p>
+    <p id="p4"></p>
+    <p id="p5"></p>
+    <p id="p6"></p>
+    <p id="p7"></p>
+    <p id="p8"></p>
+    <p id="p9"></p>
+    <p id="p10"></p>
+    <div id="target"></div>
+    <script>
+      const funcIf = (condition, funcTrue, funcFalse) => {
+        return condition ? funcTrue() : funcFalse();
+      };
+      const authorizedUser = () => {
+        console.log("Welcome back");
+      };
 
+      const unAuthorizedUser = () => {
+        console.log("Please Sign in/Sign up");
+      };
+      funcIf(true, authorizedUser, unAuthorizedUser);
+      funcIf(false, authorizedUser, unAuthorizedUser);
 
+      const getFakeMembers = (count) =>
+        new Promise((resolves, rejects) => {
+          const api = `https://api.randomuser.me/?nat=US&results=${count}`;
+          const request = new XMLHttpRequest();
+          request.open("GET", api);
+          request.onload = () =>
+            request.status === 200
+              ? resolves(JSON.parse(request.response).results)
+              : reject(Error(request.statusText));
+          request.onerror = (err) => rejects(err);
+          request.send();
+        });
 
+      const userLogs = (userName) => (message) =>
+        console.log(`${userName} -> ${message}`);
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" 
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" 
-        crossorigin="anonymous">
+      const log = userLogs("grandpa23");
+
+      log("attempted to load 20 fake members");
+      getFakeMembers(20).then(
+        (members) => log(`successfully loaded ${members.length} members`),
+        (error) => log("encountered an error loading members")
+      );
+
+      function getFunc(someFunc) {
+        console.log(someFunc());
+      }
+      const funcArg = () => {
+        return "function argument";
+      };
+      getFunc(funcArg);
+
+      const operation = (whichOperation) => {
+        console.log(whichOperation);
+      };
+      const summarize = (a, b) => a + b;
+      const multiply = (a, b) => a * b;
+      const divide = (a, b) => a / b;
+      const sub = (a, b) => a - b;
+
+      operation(summarize(5, 9));
+      //recursive
+
+      const countDown = (a, fn) => {
+        fn(a);
+        a > 0 ? countDown(a - 1, fn) : a;
+      };
+      countDown(10, (value) => console.log(value));
+
+      const countDownSecond = (value, fn, delay = 1000) => {
+        fn(value);
+        // setTimeout(()=> value > 0 ? countDownSecond(value-1 , fn , delay):value, delay)
+        return value > 0
+          ? setTimeout(() => countDownSecond(value - 1, fn, delay), delay)
+          : value;
+      };
+      // countDownSecond(10, (value) => console.log(value));
+
+      const dan = {
+        type:"person" ,
+        data : {
+          gender:"male",
+          info : {
+            id:22 ,
+            fullname:{
+              first:"Dan" ,
+              last:"Deacon"
+            }
+          }
+        }
+      }
+
+      const deepPeek = (block,object={}) => {
+        const [first , ...remaining] = block.split(".");
+        return remaining.length
+        ? deepPeek(remaining.join("."),object[first])
+        : object[first]
+      }
+      console.log(deepPeek("data.info.id",dan))
     </script>
-</body>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>
