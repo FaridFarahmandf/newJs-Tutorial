@@ -35,98 +35,48 @@
     <p id="p10"></p>
     <div id="target"></div>
     <script>
-      const funcIf = (condition, funcTrue, funcFalse) => {
-        return condition ? funcTrue() : funcFalse();
-      };
-      const authorizedUser = () => {
-        console.log("Welcome back");
-      };
+      const time = "hh:mm:ss tt" ;
+      const newTime = time.replace("hh",12).replace("mm",59).replace("ss",24).replace("tt","PM");
+      console.log(newTime) 
 
-      const unAuthorizedUser = () => {
-        console.log("Please Sign in/Sign up");
-      };
-      funcIf(true, authorizedUser, unAuthorizedUser);
-      funcIf(false, authorizedUser, unAuthorizedUser);
+      //composition 
 
-      const getFakeMembers = (count) =>
-        new Promise((resolves, rejects) => {
-          const api = `https://api.randomuser.me/?nat=US&results=${count}`;
-          const request = new XMLHttpRequest();
-          request.open("GET", api);
-          request.onload = () =>
-            request.status === 200
-              ? resolves(JSON.parse(request.response).results)
-              : reject(Error(request.statusText));
-          request.onerror = (err) => rejects(err);
-          request.send();
-        });
+      const createClockTime = date => ({date})
 
-      const userLogs = (userName) => (message) =>
-        console.log(`${userName} -> ${message}`);
-
-      const log = userLogs("grandpa23");
-
-      log("attempted to load 20 fake members");
-      getFakeMembers(20).then(
-        (members) => log(`successfully loaded ${members.length} members`),
-        (error) => log("encountered an error loading members")
-      );
-
-      function getFunc(someFunc) {
-        console.log(someFunc());
-      }
-      const funcArg = () => {
-        return "function argument";
-      };
-      getFunc(funcArg);
-
-      const operation = (whichOperation) => {
-        console.log(whichOperation);
-      };
-      const summarize = (a, b) => a + b;
-      const multiply = (a, b) => a * b;
-      const divide = (a, b) => a / b;
-      const sub = (a, b) => a - b;
-
-      operation(summarize(5, 9));
-      //recursive
-
-      const countDown = (a, fn) => {
-        fn(a);
-        a > 0 ? countDown(a - 1, fn) : a;
-      };
-      countDown(10, (value) => console.log(value));
-
-      const countDownSecond = (value, fn, delay = 1000) => {
-        fn(value);
-        // setTimeout(()=> value > 0 ? countDownSecond(value-1 , fn , delay):value, delay)
-        return value > 0
-          ? setTimeout(() => countDownSecond(value - 1, fn, delay), delay)
-          : value;
-      };
-      // countDownSecond(10, (value) => console.log(value));
-
-      const dan = {
-        type:"person" ,
-        data : {
-          gender:"male",
-          info : {
-            id:22 ,
-            fullname:{
-              first:"Dan" ,
-              last:"Deacon"
-            }
-          }
+      console.log(createClockTime(new Date()));
+      const appendAMPM = ({date}) =>
+      ({
+        date,
+        ampm: (date.getHours() >= 12) ? "PM" : "AM"
+      })
+      console.log(appendAMPM(createClockTime(new Date())));
+      const civilianHours = clockTime => {
+        const hours = clockTime.date.getHours()
+        return {
+          ...clockTime,
+          hours: (hours > 12) ?
+          hours - 12 :
+          hours
         }
       }
+    console.log(civilianHours(appendAMPM(createClockTime(new Date()))));
 
-      const deepPeek = (block,object={}) => {
-        const [first , ...remaining] = block.split(".");
-        return remaining.length
-        ? deepPeek(remaining.join("."),object[first])
-        : object[first]
-      }
-      console.log(deepPeek("data.info.id",dan))
+    const removeDate = clockTime => {
+      let newTime = {...clockTime}
+      delete newTime.date
+      return newTime
+    }
+    
+    const oneFunction = date =>
+        removeDate(
+            civilianHours(
+                appendAMPM(
+                    createClockTime(date)
+                )
+            )
+        )
+
+    console.log(oneFunction(new Date()))
     </script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
