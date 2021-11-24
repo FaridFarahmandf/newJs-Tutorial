@@ -35,152 +35,98 @@
     <p id="p10"></p>
     <div id="target"></div>
     <script>
-      const schools = ["Salam" , "Talash" , "Allameh" , "Hadaf","Daneshmand","Sohrab Sepehri"] ;
-      // join method
-      console.log(schools.join(" , "))
-      console.log(schools.filter(s => s[0]=== "S"))
+      const funcIf = (condition, funcTrue, funcFalse) => {
+        return condition ? funcTrue() : funcFalse();
+      };
+      const authorizedUser = () => {
+        console.log("Welcome back");
+      };
 
-      //filter (takes predicate as an argument)
-      const filterName = (array , name) => {
-        return array.filter(arrItem => arrItem !== name)
+      const unAuthorizedUser = () => {
+        console.log("Please Sign in/Sign up");
+      };
+      funcIf(true, authorizedUser, unAuthorizedUser);
+      funcIf(false, authorizedUser, unAuthorizedUser);
+
+      const getFakeMembers = (count) =>
+        new Promise((resolves, rejects) => {
+          const api = `https://api.randomuser.me/?nat=US&results=${count}`;
+          const request = new XMLHttpRequest();
+          request.open("GET", api);
+          request.onload = () =>
+            request.status === 200
+              ? resolves(JSON.parse(request.response).results)
+              : reject(Error(request.statusText));
+          request.onerror = (err) => rejects(err);
+          request.send();
+        });
+
+      const userLogs = (userName) => (message) =>
+        console.log(`${userName} -> ${message}`);
+
+      const log = userLogs("grandpa23");
+
+      log("attempted to load 20 fake members");
+      getFakeMembers(20).then(
+        (members) => log(`successfully loaded ${members.length} members`),
+        (error) => log("encountered an error loading members")
+      );
+
+      function getFunc(someFunc) {
+        console.log(someFunc());
       }
-      console.log(filterName(schools,"Salam").join(" / "));
-      console.log(filterName(schools,"Talash").join("\n"));
+      const funcArg = () => {
+        return "function argument";
+      };
+      getFunc(funcArg);
 
-      //map 
-      const mapSchools = schools.map(item => item + " High school") ;
-      
-      console.log(mapSchools.join("\n"));
+      const operation = (whichOperation) => {
+        console.log(whichOperation);
+      };
+      const summarize = (a, b) => a + b;
+      const multiply = (a, b) => a * b;
+      const divide = (a, b) => a / b;
+      const sub = (a, b) => a - b;
 
-      let mapObjSchool = schools.map((item,index) => ({name : item}));
-      console.log(mapObjSchool);
+      operation(summarize(5, 9));
+      //recursive
 
-      const mapEditPure = (oldName , name , arr) => 
-      arr.map(item => (item.name === oldName ? {...item,name} : item));
-      let newSchool = mapEditPure("Talash","Sagdooni",mapObjSchool);
-      console.log(newSchool[1]);
-      console.log(mapObjSchool[1]); 
+      const countDown = (a, fn) => {
+        fn(a);
+        a > 0 ? countDown(a - 1, fn) : a;
+      };
+      countDown(10, (value) => console.log(value));
 
-      let bookSchools = [
-        {name:"Yorktown"},
-        {name:"Stratford"},
-        {name:"Washington and Liberty"},
-        {name:"Wakefield"}
-      ]
-      const editName = (oldName , name , arr) => 
-      arr.map(item => {
-        if(item.name === oldName){
-          return {
-            ...item , name
-          }}else {
-            item
+      const countDownSecond = (value, fn, delay = 1000) => {
+        fn(value);
+        // setTimeout(()=> value > 0 ? countDownSecond(value-1 , fn , delay):value, delay)
+        return value > 0
+          ? setTimeout(() => countDownSecond(value - 1, fn, delay), delay)
+          : value;
+      };
+      // countDownSecond(10, (value) => console.log(value));
+
+      const dan = {
+        type:"person" ,
+        data : {
+          gender:"male",
+          info : {
+            id:22 ,
+            fullname:{
+              first:"Dan" ,
+              last:"Deacon"
+            }
           }
         }
-      )
-      let updatedSchools = editName("Stratford", "HB woodlawn",bookSchools);
-      console.log(updatedSchools[1]);
-      console.log(bookSchools[1]);
-
-      //tranform object into an array 
-
-      const schoolObj = {
-        "yorktown" : 10 ,
-        "Washington and Liberty" : 2 ,
-        "Wakefield" : 5
       }
 
-      const schoolArray = Object.keys(schoolObj).map(key => ({
-        name:key ,
-        wins:schoolObj[key]
-      }))
-
-
-      console.log(schoolArray);
-
-      const farahmandMember = {
-        "Farid" : "Bachelor of Software" ,
-        "Farnoosh" : "Master of law" ,
-        "Saman":"Master of architecture" ,
-        "Ehsan" : "Master of IT"
+      const deepPeek = (block,object={}) => {
+        const [first , ...remaining] = block.split(".");
+        return remaining.length
+        ? deepPeek(remaining.join("."),object[first])
+        : object[first]
       }
-
-      const farahmandArray = Object.keys(farahmandMember).map(key =>({
-        name : key ,
-        degree : farahmandMember[key]
-      }) )
-
-      console.log(farahmandArray);
-
-      // reduce and reduceRight
-
-      const numbers = [17,14,12,20,18,22,7,3,11];
-      const maxNumber = numbers.reduce((max,number) => {
-        console.log(`${number} > ${max} : ${number > max} `);
-        if (number > max) {
-          return number
-        }else return max
-      },0)
-      console.log("maxNumber",maxNumber);
-
-      const maxNumberShorthand = (arrNumbers) => arrNumbers.reduce((max , number) =>
-       number > max ?  number :  max , 0 
-      ) 
-      console.log(maxNumberShorthand([10,15,12,13,20 ,14]));
-
-      const colors = [
-        {
-          id:"xekare",
-          title:"red red",
-          rating:3
-        },
-        {
-          id:"jbwsof",
-          title:"big blue",
-          rating:2
-        },
-        {
-          id:"prigbj",
-          title:"grizzly gray",
-          rating:5
-        },
-        {
-          id:"ryhbhsl",
-          title:"banana",
-          rating:1
-        }
-      ]
-      const hashColors = colors.reduce((hash,{id,title,rating})=>{
-        hash[id] = {title , rating} ;
-        return hash
-      },{}) ;
-      console.log(hashColors);
-
-      const colorsUnique = ["red" , "red" , "green" , "blue" , "green"];
-      const uniqueArr = colorsUnique.reduce((value , currentVal , index ,arr) => {
-        // console.log(value);
-        if (index === 0) {
-          value[index] = currentVal;
-          return value
-        }  else {
-          for (let i = 0; i < value.length + 1; i++) {
-            if (currentVal === value[i]) {
-              return [...value]
-            }else if(i === value.length - 1) return [...value , currentVal]
-          }
-        }
-      },[])
-
-      //indexOf
-      const uniqueColors = colorsUnique.reduce((unique,color) => 
-        unique.indexOf(color) !== -1 ? unique : [...unique,color]
-      ,[])
-        
-        
-      console.log(uniqueArr);
-
-
-
-
+      console.log(deepPeek("data.info.id",dan))
     </script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
