@@ -41,42 +41,159 @@
 
       //composition 
 
-      const createClockTime = date => ({date})
+    //   const createClockTime = date => ({date})
 
-      console.log(createClockTime(new Date()));
-      const appendAMPM = ({date}) =>
-      ({
-        date,
-        ampm: (date.getHours() >= 12) ? "PM" : "AM"
-      })
-      console.log(appendAMPM(createClockTime(new Date())));
-      const civilianHours = clockTime => {
-        const hours = clockTime.date.getHours()
-        return {
-          ...clockTime,
-          hours: (hours > 12) ?
-          hours - 12 :
-          hours
-        }
-      }
-    console.log(civilianHours(appendAMPM(createClockTime(new Date()))));
+    //   console.log(createClockTime(new Date()));
+    //   const appendAMPM = ({date}) =>
+    //   ({
+    //     date,
+    //     ampm: (date.getHours() >= 12) ? "PM" : "AM"
+    //   })
+    //   console.log(appendAMPM(createClockTime(new Date())));
+    //   const civilianHours = clockTime => {
+    //     const hours = clockTime.date.getHours()
+    //     return {
+    //       ...clockTime,
+    //       hours: (hours > 12) ?
+    //       hours - 12 :
+    //       hours
+    //     }
+    //   }
+    // console.log(civilianHours(appendAMPM(createClockTime(new Date()))));
 
-    const removeDate = clockTime => {
-      let newTime = {...clockTime}
-      delete newTime.date
-      return newTime
-    }
+    // const removeDate = clockTime => {
+    //   let newTime = {...clockTime}
+    //   delete newTime.date
+    //   return newTime
+    // }
+
+    // const oneFunction = date =>
+    //     removeDate(
+    //         civilianHours(
+    //             appendAMPM(
+    //                 createClockTime(date)
+    //             )
+    //         )
+    //     )
+
+    // console.log(oneFunction(new Date()))
+
+    // a more elegant approach
+
+    const compose = (...fns) =>
+      (arg) =>
+      fns.reduce(
+        (composed, f) => f(composed),
+        arg
+    )
+    // const oneFunctionSpread = compose(
+    //   createClockTime,
+    //   appendAMPM,
+    //   civilianHours,
+    //   removeDate
+    // )
+    // console.log(oneFunctionSpread(new Date()))
+
+    // create clock 
+    // setInterval(logClockTime,1000);
+    // function logClockTime () {
+    //   let time = getClockTime()
+
+    //   console.clear();
+    //   console.log(time);
+
+    // }
     
-    const oneFunction = date =>
-        removeDate(
-            civilianHours(
-                appendAMPM(
-                    createClockTime(date)
-                )
-            )
-        )
+    // function getClockTime(){
+    //   let date = new Date();
+      // let time = "" ;
+    //   let time = {
+    //     hour : date.getHours(),
+    //     minute : date.getMinutes(),
+    //     secound : date.getSeconds(),
+    //     ampm : "AM" 
+    //   }
+    //   if (time.hour == 12) {
+    //     time.ampm = "PM";
+    //   }else if(time.hour > 12){
+    //     time.ampm = "PM";
+    //     time.hour -= 12;
+    //   }
 
-    console.log(oneFunction(new Date()))
+    //   if(time.hour<10) {
+    //     time.hour = "0" + time.hour
+    //   }
+    //   if(time.minute<10) {
+    //     time.minute = "0" + time.minute
+    //   }
+    //   if(time.secound <10) {
+    //     time.secound  = "0" + time.secound 
+    //   }
+    //   return time.hour + ":"+time.minute+":"+time.secound+ " "+time.ampm
+    // }
+
+    //functional clock
+
+    const oneSecond = () => 1000 ;
+    const getCurrentTime = () => new Date() ;
+    const clear = () => console.clear();
+    const log = message => console.log(message);
+    
+    const serializeClockTime = (date) => ({
+      hours : date.getHours() ,
+      minutes : date.getMinutes() ,
+      seconds : date.getSeconds()
+    });
+
+    const civilianHours = clockTime => ({
+      ...clockTime ,
+      hours: clockTime.hours > 12 ? clockTime.hours - 12 : clockTime.hours
+    })
+    const appendAMPM = clockTime =>({
+      ...clockTime ,
+      ampm:clockTime.hours >= 12 ? "PM" : "AM" ,
+    })
+
+    const display = target => time => target(time);
+    const formatClock = format => time => 
+      format
+        .replace("hh" , time.hours)
+        .replace("mm", time.minutes)
+        .replace("ss" , time.seconds)
+        .replace("tt" , time.ampm)
+
+    const prependZero = key => clockTime => ({
+      ...clockTime ,
+      key : clockTime[key] < 10 ? "0" + clockTime[key] : clockTime[key]
+    })
+
+    const converToCivilianTime = clockTime => 
+      compose(
+        appendAMPM,
+        civilianHours
+      )(clockTime)
+
+    const doubleDigits = civilianTime =>
+      compose(
+        prependZero("hours"),
+        prependZero("minutes"),
+        prependZero("seconds")
+      )(civilianTime)
+
+    const startTicking = () => 
+      setInterval(
+        compose(
+          clear,
+          getCurrentTime,
+          serializeClockTime,
+          converToCivilianTime,
+          doubleDigits,
+          formatClock("hh:mm:ss tt"),
+          display(log)
+        ),
+        oneSecond()
+      );
+      startTicking();
     </script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
